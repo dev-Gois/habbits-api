@@ -43,3 +43,9 @@ func Login(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Login realizado com sucesso!", "token": token})
 }
+
+func GetUser(c *gin.Context) {
+	user := c.MustGet("user").(models.User)
+
+	c.JSON(http.StatusOK, gin.H{"message": "Usuário encontrado com sucesso!", "user": user})
+}

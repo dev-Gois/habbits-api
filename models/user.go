@@ -13,7 +13,7 @@ type User struct {
 	gorm.Model
 	Name          string  `json:"name" gorm:"not null" validate:"required,min=3"`
 	Email         string  `json:"email" gorm:"not null;unique" validate:"required,email"`
-	Password      string  `json:"-" gorm:"not null"`                        // hash armazenado
+	Password      string  `json:"-" gorm:"not null"`                                     // hash armazenado
 	PlainPassword string  `json:"password,omitempty" gorm:"-" validate:"required,min=6"` // senha bruta para input
 	Habits        []Habit `gorm:"foreignKey:UserID"`
 }
@@ -44,4 +44,8 @@ func (u *User) Create() error {
 	}
 
 	return config.DB.Create(u).Error
+}
+
+func (u *User) Get() error {
+	return config.DB.First(u, u.ID).Error
 }
