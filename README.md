@@ -123,6 +123,7 @@ http://localhost:3000/api
 | GET | `/api/habits` | Obter todos os hábitos do usuário | Sim |
 | PUT | `/api/habits/:id` | Atualizar um hábito específico | Sim |
 | DELETE | `/api/habits/:id` | Deletar um hábito específico | Sim |
+| GET | `/api/habit-checks` | Obter todos os check-ins do dia do usuário | Sim |
 
 ### Exemplos de Uso
 
@@ -357,6 +358,42 @@ curl -X PUT http://localhost:3000/api/habits/1 \
 }
 ```
 
+#### Obter Check-ins do Dia (Autenticado)
+```bash
+curl -X GET http://localhost:3000/api/habit-checks \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+**Resposta:**
+```json
+[
+  {
+    "id": 1,
+    "habit_id": 1,
+    "done": false,
+    "date": "2024-06-07T00:00:00Z",
+    "habit": {
+      "id": 1,
+      "title": "Exercitar-se",
+      "icon": "🏃‍♂️",
+      "user_id": 1
+    }
+  },
+  {
+    "id": 2,
+    "habit_id": 2,
+    "done": true,
+    "date": "2024-06-07T00:00:00Z",
+    "habit": {
+      "id": 2,
+      "title": "Ler 30 minutos",
+      "icon": "📚",
+      "user_id": 1
+    }
+  }
+]
+```
+
 ## 🗄️ Modelos de Dados
 
 ### User
@@ -466,6 +503,7 @@ go build -o habbits-api main.go
 - ✅ Busca de hábitos do usuário - **NOVO**
 - ✅ Exclusão de hábitos - **NOVO**
 - ✅ Atualização de hábitos com regras especiais - **NOVO**
+- ✅ Endpoint para buscar check-ins do dia (`GET /habit-checks`) - **NOVO**
 
 ## 🔄 Próximas Funcionalidades
 
