@@ -17,5 +17,9 @@ func Delete(habitID uint, userID uint) error {
 		return err
 	}
 
+	if err := config.DB.Where("habit_id = ?", habitID).Delete(&models.HabitCheck{}).Error; err != nil {
+		return err
+	}
+
 	return config.DB.Delete(&habit).Error
 }
