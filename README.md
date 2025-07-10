@@ -239,46 +239,11 @@ O middleware `Authorization()` verifica:
 - Validade do token JWT
 - Existência do usuário no banco de dados
 
-## 🧪 Testando o Sistema
-
-### 1. Teste de Criação de Usuário
-```bash
-curl -X POST http://localhost:3000/api/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Teste User",
-    "email": "teste@example.com",
-    "password": "senha123"
-  }'
-```
-
-### 2. Teste de Login
-```bash
-curl -X POST http://localhost:3000/api/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "teste@example.com",
-    "password": "senha123"
-  }'
-```
-
-### 3. Teste de Autorização
-```bash
-# Use o token retornado no login
-curl -X GET http://localhost:3000/api/user \
-  -H "Authorization: Bearer SEU_TOKEN_AQUI"
-```
-
 ## 🔧 Desenvolvimento
 
 ### Executar em modo de desenvolvimento
 ```bash
 go run main.go
-```
-
-### Executar testes
-```bash
-go test ./...
 ```
 
 ### Build da aplicação
