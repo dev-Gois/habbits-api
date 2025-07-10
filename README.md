@@ -124,6 +124,7 @@ http://localhost:3000/api
 | PUT | `/api/habits/:id` | Atualizar um hábito específico | Sim |
 | DELETE | `/api/habits/:id` | Deletar um hábito específico | Sim |
 | GET | `/api/habit-checks` | Obter todos os check-ins do dia do usuário | Sim |
+| PUT | `/api/habit-checks/:id/check` | Marcar/desmarcar check-in como concluído | Sim |
 
 ### Exemplos de Uso
 
@@ -394,6 +395,26 @@ curl -X GET http://localhost:3000/api/habit-checks \
 ]
 ```
 
+#### Marcar/Desmarcar Check-in (Autenticado)
+```bash
+curl -X PUT http://localhost:3000/api/habit-checks/1/check \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+**Resposta:**
+```json
+{
+  "message": "Check-in realizado com sucesso"
+}
+```
+
+**Erro (Check-in não encontrado):**
+```json
+{
+  "error": "check-in não encontrado"
+}
+```
+
 ## 🗄️ Modelos de Dados
 
 ### User
@@ -504,6 +525,7 @@ go build -o habbits-api main.go
 - ✅ Exclusão de hábitos - **NOVO**
 - ✅ Atualização de hábitos com regras especiais - **NOVO**
 - ✅ Endpoint para buscar check-ins do dia (`GET /habit-checks`) - **NOVO**
+- ✅ Endpoint para marcar/desmarcar check-ins (`PUT /habit-checks/:id/check`) - **NOVO**
 
 ## 🔄 Próximas Funcionalidades
 
