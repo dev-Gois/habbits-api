@@ -4,7 +4,7 @@ Uma API RESTful desenvolvida em Go para gerenciamento de hábitos e rotinas diá
 
 ## 📋 Descrição
 
-A Habbits API é uma aplicação backend construída com Go, Gin e GORM que permite aos usuários gerenciar seus hábitos, definir metas e acompanhar seu progresso diário. A API oferece funcionalidades de autenticação JWT, criação de usuários, gerenciamento de hábitos e controle de check-ins diários.
+A Habbits API é uma aplicação backend construída com Go, Gin e GORM que permite aos usuários gerenciar seus hábitos, definir metas e acompanhar seu progresso diário. A API oferece funcionalidades de autenticação JWT, criação e login de usuários, gerenciamento de hábitos e controle de check-ins diários.
 
 ## 🚀 Tecnologias Utilizadas
 
@@ -37,7 +37,8 @@ habbits-api/
 │   │   ├── encode.go        # Geração de tokens JWT
 │   │   └── decode.go        # Decodificação de tokens JWT
 │   └── users/
-│       └── create.go        # Lógica de criação de usuários
+│       ├── create.go        # Lógica de criação de usuários
+│       └── login.go         # Lógica de login de usuários
 ├── go.mod                   # Dependências do Go
 ├── go.sum                   # Checksums das dependências
 └── main.go                  # Ponto de entrada da aplicação
@@ -101,6 +102,7 @@ http://localhost:3000/api
 |--------|----------|-----------|--------------|
 | GET | `/` | Endpoint de teste da aplicação | Não |
 | POST | `/register` | Criar novo usuário | Não |
+| POST | `/login` | Fazer login de usuário | Não |
 
 ### Exemplos de Uso
 
@@ -130,6 +132,24 @@ curl -X POST http://localhost:3000/api/register \
 }
 ```
 
+#### Fazer Login
+```bash
+curl -X POST http://localhost:3000/api/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "joao@example.com",
+    "password": "senha123"
+  }'
+```
+
+**Resposta:**
+```json
+{
+  "message": "Login realizado com sucesso!",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
 ## 🗄️ Modelos de Dados
 
 ### User
@@ -138,6 +158,11 @@ curl -X POST http://localhost:3000/api/register \
 - `email` - Email do usuário (único)
 - `password` - Senha criptografada
 - `habits` - Relacionamento com hábitos do usuário
+
+**Métodos:**
+- `SetPassword(password)` - Criptografa e define a senha
+- `CheckPassword(password)` - Verifica se a senha está correta
+- `Create()` - Cria o usuário com validações
 
 ### Habit
 - `id` - ID único do hábito
@@ -163,9 +188,22 @@ curl -X POST http://localhost:3000/api/register \
 
 A API utiliza JWT (JSON Web Tokens) para autenticação:
 
-- **Geração de Token**: Ao criar um usuário, um token JWT é gerado automaticamente
+- **Geração de Token**: Ao criar um usuário ou fazer login, um token JWT é gerado automaticamente
 - **Validade**: Tokens são válidos por 30 dias
 - **Segurança**: Senhas são criptografadas usando bcrypt
+- **Decodificação**: Função para decodificar tokens e extrair o ID do usuário
+
+### Serviços JWT
+
+#### Encode (Geração de Token)
+```go
+token, err := jwt.Encode(userID)
+```
+
+#### Decode (Decodificação de Token)
+```go
+userID, err := jwt.Decode(tokenString)
+```
 
 ## 🔧 Desenvolvimento
 
@@ -198,19 +236,23 @@ go build -o habbits-api main.go
 
 - ✅ Configuração do banco de dados PostgreSQL
 - ✅ Modelos de dados (User, Habit, HabitCheck)
-- ✅ Autenticação JWT
+- ✅ Autenticação JWT (encode/decode)
 - ✅ Criação de usuários com validação
-- ✅ Criptografia de senhas
+- ✅ Login de usuários
+- ✅ Criptografia de senhas com bcrypt
+- ✅ Validação de dados com validator
 - ✅ Estrutura de rotas básica
+- ✅ Tratamento de erros personalizado
 
 ## 🔄 Próximas Funcionalidades
 
-- [ ] Login de usuários
+- [ ] Middleware de autenticação
 - [ ] CRUD completo de hábitos
 - [ ] Sistema de check-ins diários
-- [ ] Middleware de autenticação
 - [ ] Relatórios e estatísticas
 - [ ] Notificações
+- [ ] Recuperação de senha
+- [ ] Atualização de perfil
 
 ## 🤝 Contribuindo
 
