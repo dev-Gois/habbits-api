@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/dev-Gois/habbits-api/models"
 	"github.com/dev-Gois/habbits-api/services/habits"
@@ -36,4 +37,25 @@ func GetHabits(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, habits)
+}
+
+func DeleteHabit(c *gin.Context) {
+	habitID, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
+		return
+	}
+
+	user := c.MustGet("user").(models.User)
+
+	if err := habits.Delete(uint(habitID), user.ID); err != nil {
+		if err.Error() == "hábito não encontrado" {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Hábito deletado com sucesso"})
 }
