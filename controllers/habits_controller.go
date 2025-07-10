@@ -25,3 +25,15 @@ func CreateHabit(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, habit)
 }
+
+func GetHabits(c *gin.Context) {
+	user := c.MustGet("user").(models.User)
+
+	habits, err := habits.FindAllByUserID(user.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, habits)
+}
