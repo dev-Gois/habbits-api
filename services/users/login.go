@@ -14,7 +14,7 @@ func Login(user models.User) (string, error) {
 		return "", fmt.Errorf("Usuário não encontrado!")
 	}
 
-	if !existing.CheckPassword(user.Password) {
+	if !existing.CheckPassword(user.PlainPassword) {
 		return "", fmt.Errorf("Senha incorreta!")
 	}
 

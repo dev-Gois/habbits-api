@@ -4,17 +4,18 @@ import (
 	"fmt"
 
 	"github.com/dev-Gois/habbits-api/config"
+	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-	"github.com/go-playground/validator/v10"
 )
 
 type User struct {
 	gorm.Model
-	Name     string 	`json:"name" gorm:"not null" validate:"required,min=3"`
-	Email    string 	`json:"email" gorm:"not null" validate:"required,email"`
-	Password string 	`json:"-" gorm:"not null"`
-	Habits   []Habit 	`gorm:"foreignKey:UserID"`
+	Name          string  `json:"name" gorm:"not null" validate:"required,min=3"`
+	Email         string  `json:"email" gorm:"not null;unique" validate:"required,email"`
+	Password      string  `json:"-" gorm:"not null"`                        // hash armazenado
+	PlainPassword string  `json:"password,omitempty" gorm:"-" validate:"required,min=6"` // senha bruta para input
+	Habits        []Habit `gorm:"foreignKey:UserID"`
 }
 
 func (u *User) SetPassword(password string) error {
@@ -32,14 +33,14 @@ func (u *User) CheckPassword(password string) bool {
 }
 
 func (u *User) Create() error {
-	var validate = validator.New()
-	
+	validate := validator.New()
+
 	if err := validate.Struct(u); err != nil {
 		return fmt.Errorf("validation error: %w", err)
 	}
 
-	if err := u.SetPassword(u.Password); err != nil {
-		return fmt.Errorf("failed to set password: %w", err)
+	if err := u.SetPassword(u.PlainPassword); err != nil {
+		return fmt.Errorf("failed to hash password: %w", err)
 	}
 
 	return config.DB.Create(u).Error
