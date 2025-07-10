@@ -8,7 +8,7 @@ import (
 func FindAllByUserID(userID uint) ([]models.Habit, error) {
 	var habits []models.Habit
 
-	err := config.DB.Where("user_id = ?", userID).Preload("User").Find(&habits).Error
+	err := config.DB.Where("user_id = ? AND deleted_at IS NULL", userID).Preload("User").Find(&habits).Error
 	if err != nil {
 		return nil, err
 	}

@@ -14,7 +14,7 @@ func GetAllToday(userID uint) ([]models.HabitCheck, error) {
 		Joins("JOIN habits ON habits.id = habit_checks.habit_id").
 		Preload("Habit").
 		Preload("Habit.User").
-		Where("habits.user_id = ? AND habit_checks.date = ?", userID, today).
+		Where("habits.user_id = ? AND habit_checks.date = ? AND habits.deleted_at IS NULL", userID, today).
 		Find(&habitChecks).Error
 	if err != nil {
 		return nil, err
