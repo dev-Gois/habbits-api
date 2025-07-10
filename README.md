@@ -26,6 +26,8 @@ habbits-api/
 ├── controllers/
 │   ├── application_controller.go  # Controlador de aplicação
 │   └── users_controller.go       # Controlador de usuários
+├── middlewares/
+│   └── authorization.go     # Middleware de autorização
 ├── models/
 │   ├── user.go              # Modelo de usuário
 │   ├── habit.go             # Modelo de hábito
@@ -103,6 +105,7 @@ http://localhost:3000/api
 | GET | `/` | Endpoint de teste da aplicação | Não |
 | POST | `/register` | Criar novo usuário | Não |
 | POST | `/login` | Fazer login de usuário | Não |
+| GET | `/user` | Obter dados do usuário logado | Sim |
 
 ### Exemplos de Uso
 
@@ -150,6 +153,26 @@ curl -X POST http://localhost:3000/api/login \
 }
 ```
 
+#### Obter Dados do Usuário (Autenticado)
+```bash
+curl -X GET http://localhost:3000/api/user \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+**Resposta:**
+```json
+{
+  "message": "Usuário encontrado com sucesso!",
+  "user": {
+    "id": 1,
+    "name": "João Silva",
+    "email": "joao@example.com",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
 ## 🗄️ Modelos de Dados
 
 ### User
@@ -157,12 +180,14 @@ curl -X POST http://localhost:3000/api/login \
 - `name` - Nome do usuário (mínimo 3 caracteres)
 - `email` - Email do usuário (único)
 - `password` - Senha criptografada
+- `plain_password` - Senha em texto plano (apenas para input)
 - `habits` - Relacionamento com hábitos do usuário
 
 **Métodos:**
 - `SetPassword(password)` - Criptografa e define a senha
 - `CheckPassword(password)` - Verifica se a senha está correta
 - `Create()` - Cria o usuário com validações
+- `Get()` - Busca o usuário pelo ID
 
 ### Habit
 - `id` - ID único do hábito
@@ -192,6 +217,7 @@ A API utiliza JWT (JSON Web Tokens) para autenticação:
 - **Validade**: Tokens são válidos por 30 dias
 - **Segurança**: Senhas são criptografadas usando bcrypt
 - **Decodificação**: Função para decodificar tokens e extrair o ID do usuário
+- **Middleware**: Middleware de autorização para proteger rotas
 
 ### Serviços JWT
 
@@ -203,6 +229,44 @@ token, err := jwt.Encode(userID)
 #### Decode (Decodificação de Token)
 ```go
 userID, err := jwt.Decode(tokenString)
+```
+
+### Middleware de Autorização
+
+O middleware `Authorization()` verifica:
+- Presença do header `Authorization`
+- Formato correto: `Bearer <token>`
+- Validade do token JWT
+- Existência do usuário no banco de dados
+
+## 🧪 Testando o Sistema
+
+### 1. Teste de Criação de Usuário
+```bash
+curl -X POST http://localhost:3000/api/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Teste User",
+    "email": "teste@example.com",
+    "password": "senha123"
+  }'
+```
+
+### 2. Teste de Login
+```bash
+curl -X POST http://localhost:3000/api/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "teste@example.com",
+    "password": "senha123"
+  }'
+```
+
+### 3. Teste de Autorização
+```bash
+# Use o token retornado no login
+curl -X GET http://localhost:3000/api/user \
+  -H "Authorization: Bearer SEU_TOKEN_AQUI"
 ```
 
 ## 🔧 Desenvolvimento
@@ -236,23 +300,40 @@ go build -o habbits-api main.go
 
 - ✅ Configuração do banco de dados PostgreSQL
 - ✅ Modelos de dados (User, Habit, HabitCheck)
-- ✅ Autenticação JWT (encode/decode)
+- ✅ Autenticação JWT (encode/decode) - **CORRIGIDO**
 - ✅ Criação de usuários com validação
 - ✅ Login de usuários
 - ✅ Criptografia de senhas com bcrypt
 - ✅ Validação de dados com validator
+- ✅ Middleware de autorização - **CORRIGIDO**
 - ✅ Estrutura de rotas básica
 - ✅ Tratamento de erros personalizado
+- ✅ Endpoint protegido `/user`
 
 ## 🔄 Próximas Funcionalidades
 
-- [ ] Middleware de autenticação
 - [ ] CRUD completo de hábitos
 - [ ] Sistema de check-ins diários
 - [ ] Relatórios e estatísticas
 - [ ] Notificações
 - [ ] Recuperação de senha
 - [ ] Atualização de perfil
+
+## 🐛 Correções Recentes
+
+### Sistema JWT
+- **Problema**: Token inválido devido a incompatibilidade de tipos
+- **Solução**: Convertido `userID` para `float64` na codificação e `float64` para `uint` na decodificação
+- **Melhoria**: Adicionado melhor tratamento de erros e validação de expiração
+
+### Middleware de Autorização
+- **Problema**: Mensagens de erro genéricas
+- **Solução**: Mensagens de erro mais específicas e informativas
+- **Melhoria**: Adicionado contexto adicional (`userID`) para uso posterior
+
+### Modelo User
+- **Problema**: Método `Get()` não funcionava corretamente
+- **Solução**: Corrigido para buscar pelo ID correto do usuário
 
 ## 🤝 Contribuindo
 
