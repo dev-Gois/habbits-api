@@ -30,12 +30,8 @@ func addJobs() {
 		createDailyHabitChecks(time.Now())
 	})
 
-	// Limpar habit_checks antigos (todo domingo à 02:00)
-	scheduler.AddFunc("0 2 * * 0", cleanOldHabitChecks)
-
 	log.Println("Cron jobs registrados:")
 	log.Println("- Criar check-ins diários: 0 0 * * * (todo dia à 00:00)")
-	log.Println("- Limpar check-ins antigos: 0 2 * * 0 (todo domingo à 02:00)")
 }
 
 // CreateDailyHabitChecksForDate cria check-ins para uma data específica
@@ -81,21 +77,6 @@ func CreateDailyHabitChecksForDate(targetDate time.Time) (int, error) {
 // createDailyHabitChecks cria check-ins para hábitos ativos do dia (versão automática)
 func createDailyHabitChecks(today time.Time) {
 	CreateDailyHabitChecksForDate(today)
-}
-
-// cleanOldHabitChecks remove habit_checks antigos (mais de 30 dias)
-func cleanOldHabitChecks() {
-	log.Println("Executando: Limpar check-ins antigos")
-
-	thirtyDaysAgo := time.Now().AddDate(0, 0, -30)
-
-	result := config.DB.Where("date < ?", thirtyDaysAgo).Delete(&models.HabitCheck{})
-	if result.Error != nil {
-		log.Printf("Erro ao limpar check-ins antigos: %v", result.Error)
-		return
-	}
-
-	log.Printf("Removidos %d check-ins antigos", result.RowsAffected)
 }
 
 // isHabitActiveToday verifica se o hábito está ativo para o dia da semana
