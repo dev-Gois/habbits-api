@@ -44,7 +44,8 @@ habbits-api/
 │   │   └── login.go         # Lógica de login de usuários
 │   └── habits/
 │       ├── create.go        # Lógica de criação de hábitos
-│       └── find_all.go      # Lógica de busca de hábitos
+│       ├── find_all.go      # Lógica de busca de hábitos
+│       └── delete.go        # Lógica de exclusão de hábitos
 ├── go.mod                   # Dependências do Go
 ├── go.sum                   # Checksums das dependências
 └── main.go                  # Ponto de entrada da aplicação
@@ -112,6 +113,7 @@ http://localhost:3000/api
 | GET | `/api/user` | Obter dados do usuário logado | Sim |
 | POST | `/api/habits` | Criar novo hábito | Sim |
 | GET | `/api/habits` | Obter todos os hábitos do usuário | Sim |
+| DELETE | `/api/habits/:id` | Deletar um hábito específico | Sim |
 
 ### Exemplos de Uso
 
@@ -281,6 +283,26 @@ curl -X GET http://localhost:3000/api/habits \
 ]
 ```
 
+#### Deletar Hábito (Autenticado)
+```bash
+curl -X DELETE http://localhost:3000/api/habits/1 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+**Resposta:**
+```json
+{
+  "message": "Hábito deletado com sucesso"
+}
+```
+
+**Erro (Hábito não encontrado):**
+```json
+{
+  "error": "hábito não encontrado"
+}
+```
+
 ## 🗄️ Modelos de Dados
 
 ### User
@@ -388,6 +410,7 @@ go build -o habbits-api main.go
 - ✅ Endpoint protegido `/user`
 - ✅ Criação de hábitos - **NOVO**
 - ✅ Busca de hábitos do usuário - **NOVO**
+- ✅ Exclusão de hábitos - **NOVO**
 
 ## 🔄 Próximas Funcionalidades
 
@@ -423,6 +446,11 @@ go build -o habbits-api main.go
 - **Problema**: Falta de endpoint para buscar hábitos do usuário
 - **Solução**: Implementado endpoint `GET /habits` com autenticação
 - **Melhoria**: Retorna todos os hábitos do usuário logado com dados completos
+
+### Exclusão de Hábitos
+- **Problema**: Endpoint de delete não verificava propriedade do hábito e não retornava resposta adequada
+- **Solução**: Implementado verificação de propriedade e tratamento de erros específicos
+- **Melhoria**: Agora verifica se o hábito existe e pertence ao usuário antes de deletar
 
 ## 🤝 Contribuindo
 
