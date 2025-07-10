@@ -19,5 +19,6 @@ func SetupRoutes(router *gin.Engine) {
 		api.GET("/habits", middlewares.Authorization(), controllers.GetHabits)
 		api.DELETE("/habits/:id", middlewares.Authorization(), controllers.DeleteHabit)
 		api.PUT("/habits/:id", middlewares.Authorization(), controllers.UpdateHabit)
+		api.GET("/habit-checks", middlewares.Authorization(), controllers.GetToday)
 	}
 }
