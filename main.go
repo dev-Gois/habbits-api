@@ -4,7 +4,7 @@ import (
 	"github.com/dev-Gois/habbits-api/config"
 	"github.com/dev-Gois/habbits-api/models"
 	"github.com/dev-Gois/habbits-api/routes"
-	"github.com/dev-Gois/habbits-api/services/cron"
+	"github.com/dev-Gois/habbits-api/workers"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +13,7 @@ func main() {
 	config.DB.AutoMigrate(&models.User{}, &models.Habit{}, &models.HabitCheck{})
 
 	// Inicializar cron scheduler
-	cron.InitScheduler()
+	workers.InitScheduler()
 
 	router := gin.Default()
 	routes.SetupRoutes(router)

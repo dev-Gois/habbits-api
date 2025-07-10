@@ -1,4 +1,4 @@
-package cron
+package jobs
 
 import (
 	"log"
@@ -7,28 +7,9 @@ import (
 	"github.com/dev-Gois/habbits-api/config"
 	"github.com/dev-Gois/habbits-api/models"
 	"github.com/dev-Gois/habbits-api/services/habit_checks"
-	"github.com/robfig/cron/v3"
 )
 
-var scheduler *cron.Cron
-
-func InitScheduler() {
-	scheduler = cron.New(cron.WithLocation(time.UTC))
-
-	addJobs()
-
-	scheduler.Start()
-	log.Println("Cron scheduler iniciado")
-}
-
-func addJobs() {
-	scheduler.AddFunc("0 0 * * *", createDailyHabitChecks)
-
-	log.Println("Cron jobs registrados:")
-	log.Println("- Criar check-ins diários: 0 0 * * * (todo dia à 00:00)")
-}
-
-func createDailyHabitChecks() {
+func CreateDailyHabitChecks() {
 	log.Println("Executando: Criar check-ins diários")
 
 	var habits []models.Habit
@@ -93,11 +74,4 @@ func habitCheckExistsToday(habitID uint, today time.Time) (bool, error) {
 		Count(&count).Error
 
 	return count > 0, err
-}
-
-func StopScheduler() {
-	if scheduler != nil {
-		scheduler.Stop()
-		log.Println("Cron scheduler parado")
-	}
 }
