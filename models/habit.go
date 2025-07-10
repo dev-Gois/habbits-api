@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/dev-Gois/habbits-api/config"
+	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 )
 
@@ -22,5 +23,9 @@ type Habit struct {
 }
 
 func (h *Habit) Create() error {
+	if err := validator.New().Struct(h); err != nil {
+		return err
+	}
+
 	return config.DB.Create(h).Error
 }
