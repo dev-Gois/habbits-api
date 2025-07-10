@@ -42,10 +42,18 @@ habbits-api/
 │   ├── users/
 │   │   ├── create.go        # Lógica de criação de usuários
 │   │   └── login.go         # Lógica de login de usuários
-│   └── habits/
-│       ├── create.go        # Lógica de criação de hábitos
-│       ├── find_all.go      # Lógica de busca de hábitos
-│       └── delete.go        # Lógica de exclusão de hábitos
+│   ├── habits/
+│   │   ├── create.go        # Lógica de criação de hábitos
+│   │   ├── find_all.go      # Lógica de busca de hábitos
+│   │   ├── find.go          # Lógica de busca de hábito específico
+│   │   ├── update.go        # Lógica de atualização de hábitos
+│   │   ├── delete.go        # Lógica de exclusão de hábitos
+│   │   ├── verify_weekday_on_create.go  # Verificação de dia da semana na criação
+│   │   └── get_habit_day_value.go       # Obter valor do dia do hábito
+│   └── habit_checks/
+│       ├── create.go        # Lógica de criação de check-ins 
+│       ├── handle_today.go  # Lógica de manipulação do dia atual
+│       └── delete_incomplete.go  # Lógica de exclusão de check-ins incompletos
 ├── go.mod                   # Dependências do Go
 ├── go.sum                   # Checksums das dependências
 └── main.go                  # Ponto de entrada da aplicação
@@ -113,6 +121,7 @@ http://localhost:3000/api
 | GET | `/api/user` | Obter dados do usuário logado | Sim |
 | POST | `/api/habits` | Criar novo hábito | Sim |
 | GET | `/api/habits` | Obter todos os hábitos do usuário | Sim |
+| PUT | `/api/habits/:id` | Atualizar um hábito específico | Sim |
 | DELETE | `/api/habits/:id` | Deletar um hábito específico | Sim |
 
 ### Exemplos de Uso
@@ -303,6 +312,51 @@ curl -X DELETE http://localhost:3000/api/habits/1 \
 }
 ```
 
+#### Atualizar Hábito (Autenticado)
+```bash
+curl -X PUT http://localhost:3000/api/habits/1 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Comer Brownie",
+    "icon": "🍫",
+    "sunday": true,
+    "monday": true,
+    "tuesday": true,
+    "wednesday": true,
+    "thursday": true,
+    "friday": true,
+    "saturday": true
+  }'
+```
+
+**Resposta:**
+```json
+{
+  "id": 1,
+  "title": "Comer Brownie",
+  "icon": "🍫",
+  "sunday": true,
+  "monday": true,
+  "tuesday": true,
+  "wednesday": true,
+  "thursday": true,
+  "friday": true,
+  "saturday": true,
+  "user_id": 5,
+  "user": {
+    "id": 5,
+    "name": "João Silva",
+    "email": "joao@example.com",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  },
+  "checks": [],
+  "created_at": "2024-01-15T10:30:00Z",
+  "updated_at": "2024-01-15T10:30:00Z"
+}
+```
+
 ## 🗄️ Modelos de Dados
 
 ### User
@@ -411,6 +465,7 @@ go build -o habbits-api main.go
 - ✅ Criação de hábitos - **NOVO**
 - ✅ Busca de hábitos do usuário - **NOVO**
 - ✅ Exclusão de hábitos - **NOVO**
+- ✅ Atualização de hábitos com regras especiais - **NOVO**
 
 ## 🔄 Próximas Funcionalidades
 
