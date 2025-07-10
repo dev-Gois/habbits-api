@@ -50,10 +50,12 @@ habbits-api/
 │   │   ├── delete.go        # Lógica de exclusão de hábitos
 │   │   ├── verify_weekday_on_create.go  # Verificação de dia da semana na criação
 │   │   └── get_habit_day_value.go       # Obter valor do dia do hábito
-│   └── habit_checks/
-│       ├── create.go        # Lógica de criação de check-ins 
-│       ├── handle_today.go  # Lógica de manipulação do dia atual
-│       └── delete_incomplete.go  # Lógica de exclusão de check-ins incompletos
+│   ├── habit_checks/
+│   │   ├── create.go        # Lógica de criação de check-ins 
+│   │   ├── handle_today.go  # Lógica de manipulação do dia atual
+│   │   └── delete_incomplete.go  # Lógica de exclusão de check-ins incompletos
+│   └── cron/
+│       └── scheduler.go     # Scheduler de cron jobs automatizados
 ├── go.mod                   # Dependências do Go
 ├── go.sum                   # Checksums das dependências
 └── main.go                  # Ponto de entrada da aplicação
@@ -526,15 +528,25 @@ go build -o habbits-api main.go
 - ✅ Atualização de hábitos com regras especiais - **NOVO**
 - ✅ Endpoint para buscar check-ins do dia (`GET /habit-checks`) - **NOVO**
 - ✅ Endpoint para marcar/desmarcar check-ins (`PUT /habit-checks/:id/check`) - **NOVO**
+- ✅ Sistema de cron jobs automatizados - **NOVO**
 
-## 🔄 Próximas Funcionalidades
+## ⏰ Cron Jobs Automatizados
 
-- [ ] CRUD completo de hábitos
-- [ ] Sistema de check-ins diários
-- [ ] Relatórios e estatísticas
-- [ ] Notificações
-- [ ] Recuperação de senha
-- [ ] Atualização de perfil
+A API inclui um sistema de cron jobs que executa tarefas automatizadas:
+
+### Jobs Configurados
+
+| Cron Expression | Descrição | Frequência |
+|----------------|-----------|------------|
+| `0 0 * * *` | Criar check-ins diários | Todo dia à 00:00 |
+
+### Funcionalidades
+
+- **Criação Automática de Check-ins**: Cria automaticamente check-ins para hábitos ativos do dia
+
+### Como Funciona
+
+1. **Check-ins Diários**: Todo dia à meia-noite, o sistema verifica todos os hábitos ativos e cria check-ins para os que devem ser executados naquele dia da semana
 
 ## 🐛 Correções Recentes
 
