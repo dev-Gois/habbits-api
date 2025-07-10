@@ -15,7 +15,7 @@ type User struct {
 	Email         string  `json:"email" gorm:"not null;unique" validate:"required,email"`
 	Password      string  `json:"-" gorm:"not null"`                                     // hash armazenado
 	PlainPassword string  `json:"password,omitempty" gorm:"-" validate:"required,min=6"` // senha bruta para input
-	Habits        []Habit `gorm:"foreignKey:UserID"`
+	Habits        []Habit `json:"habits,omitempty" gorm:"foreignKey:UserID"`
 }
 
 func (u *User) SetPassword(password string) error {

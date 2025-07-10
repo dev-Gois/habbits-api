@@ -15,5 +15,6 @@ func SetupRoutes(router *gin.Engine) {
 		api.POST("/register", controllers.CreateUser)
 		api.POST("/login", controllers.Login)
 		api.GET("/user", middlewares.Authorization(), controllers.GetUser)
+		api.POST("/habits", middlewares.Authorization(), controllers.CreateHabit)
 	}
 }
