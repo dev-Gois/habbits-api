@@ -85,7 +85,6 @@ func UpdateHabit(c *gin.Context) {
 		return
 	}
 
-	// Busca o hábito atualizado do banco para retornar dados completos
 	habit, err := habits.FindByID(uint(habitID), user.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao buscar hábito atualizado"})
