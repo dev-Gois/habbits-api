@@ -9,7 +9,7 @@ import (
 
 func Encode(userID uint) (string, error) {
 	claims := jwt.MapClaims{
-		"sub": userID,
+		"sub": float64(userID),
 		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
 	}
 
