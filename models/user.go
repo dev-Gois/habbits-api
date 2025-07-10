@@ -1,11 +1,13 @@
 package models
 
 import (
+	"fmt"
+
 	"github.com/dev-Gois/habbits-api/config"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+	"github.com/go-playground/validator/v10"
 )
-
 
 type User struct {
 	gorm.Model
@@ -30,5 +32,15 @@ func (u *User) CheckPassword(password string) bool {
 }
 
 func (u *User) Create() error {
+	var validate = validator.New()
+	
+	if err := validate.Struct(u); err != nil {
+		return fmt.Errorf("validation error: %w", err)
+	}
+
+	if err := u.SetPassword(u.Password); err != nil {
+		return fmt.Errorf("failed to set password: %w", err)
+	}
+
 	return config.DB.Create(u).Error
 }

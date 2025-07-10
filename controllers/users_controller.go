@@ -25,3 +25,21 @@ func CreateUser(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"message": "Usuário criado com sucesso!", "user": user, "token": token})
 }
+
+func Login(c *gin.Context) {
+	var user models.User
+
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	token, err := users.Login(user)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Login realizado com sucesso!", "token": token})
+}
