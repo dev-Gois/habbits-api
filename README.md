@@ -25,7 +25,8 @@ habbits-api/
 │   └── database.go          # Configuração do banco de dados
 ├── controllers/
 │   ├── application_controller.go  # Controlador de aplicação
-│   └── users_controller.go       # Controlador de usuários
+│   ├── users_controller.go       # Controlador de usuários
+│   └── habits_controller.go      # Controlador de hábitos
 ├── middlewares/
 │   └── authorization.go     # Middleware de autorização
 ├── models/
@@ -38,9 +39,11 @@ habbits-api/
 │   ├── jwt/
 │   │   ├── encode.go        # Geração de tokens JWT
 │   │   └── decode.go        # Decodificação de tokens JWT
-│   └── users/
-│       ├── create.go        # Lógica de criação de usuários
-│       └── login.go         # Lógica de login de usuários
+│   ├── users/
+│   │   ├── create.go        # Lógica de criação de usuários
+│   │   └── login.go         # Lógica de login de usuários
+│   └── habits/
+│       └── create.go        # Lógica de criação de hábitos
 ├── go.mod                   # Dependências do Go
 ├── go.sum                   # Checksums das dependências
 └── main.go                  # Ponto de entrada da aplicação
@@ -102,10 +105,11 @@ http://localhost:3000/api
 
 | Método | Endpoint | Descrição | Autenticação |
 |--------|----------|-----------|--------------|
-| GET | `/` | Endpoint de teste da aplicação | Não |
-| POST | `/register` | Criar novo usuário | Não |
-| POST | `/login` | Fazer login de usuário | Não |
-| GET | `/user` | Obter dados do usuário logado | Sim |
+| GET | `/api` | Endpoint de teste da aplicação | Não |
+| POST | `/api/register` | Criar novo usuário | Não |
+| POST | `/api/login` | Fazer login de usuário | Não |
+| GET | `/api/user` | Obter dados do usuário logado | Sim |
+| POST | `/api/habits` | Criar novo hábito | Sim |
 
 ### Exemplos de Uso
 
@@ -173,6 +177,50 @@ curl -X GET http://localhost:3000/api/user \
 }
 ```
 
+#### Criar Hábito (Autenticado)
+```bash
+curl -X POST http://localhost:3000/api/habits \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Exercitar-se",
+    "icon": "🏃‍♂️",
+    "sunday": true,
+    "monday": true,
+    "tuesday": true,
+    "wednesday": true,
+    "thursday": true,
+    "friday": true,
+    "saturday": false
+  }'
+```
+
+**Resposta:**
+```json
+{
+  "id": 1,
+  "title": "Exercitar-se",
+  "icon": "🏃‍♂️",
+  "sunday": true,
+  "monday": true,
+  "tuesday": true,
+  "wednesday": true,
+  "thursday": true,
+  "friday": true,
+  "saturday": false,
+  "user_id": 1,
+  "user": {
+    "id": 1,
+    "name": "João Silva",
+    "email": "joao@example.com",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  },
+  "created_at": "2024-01-15T10:30:00Z",
+  "updated_at": "2024-01-15T10:30:00Z"
+}
+```
+
 ## 🗄️ Modelos de Dados
 
 ### User
@@ -201,7 +249,11 @@ curl -X GET http://localhost:3000/api/user \
 - `friday` - Habilitado para sexta
 - `saturday` - Habilitado para sábado
 - `user_id` - ID do usuário proprietário
+- `user` - Dados do usuário proprietário
 - `checks` - Relacionamento com check-ins
+
+**Métodos:**
+- `Create()` - Cria o hábito
 
 ### HabitCheck
 - `id` - ID único do check-in
@@ -274,6 +326,7 @@ go build -o habbits-api main.go
 - ✅ Estrutura de rotas básica
 - ✅ Tratamento de erros personalizado
 - ✅ Endpoint protegido `/user`
+- ✅ Criação de hábitos - **NOVO**
 
 ## 🔄 Próximas Funcionalidades
 
@@ -299,6 +352,11 @@ go build -o habbits-api main.go
 ### Modelo User
 - **Problema**: Método `Get()` não funcionava corretamente
 - **Solução**: Corrigido para buscar pelo ID correto do usuário
+
+### Criação de Hábitos
+- **Problema**: Falta de endpoint para criação de hábitos
+- **Solução**: Implementado endpoint `POST /habits` com autenticação
+- **Melhoria**: Hábito criado automaticamente associado ao usuário logado
 
 ## 🤝 Contribuindo
 
