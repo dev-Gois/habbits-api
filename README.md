@@ -127,6 +127,7 @@ http://localhost:3000/api
 | DELETE | `/api/habits/:id` | Deletar um hábito específico | Sim |
 | GET | `/api/habit-checks` | Obter todos os check-ins do dia do usuário | Sim |
 | PUT | `/api/habit-checks/:id/check` | Marcar/desmarcar check-in como concluído | Sim |
+| POST | `/api/workers/create-habit-checks` | Executar job de criar check-ins para uma data | Não |
 
 ### Exemplos de Uso
 
@@ -417,6 +418,36 @@ curl -X PUT http://localhost:3000/api/habit-checks/1/check \
 }
 ```
 
+#### Executar Job Manualmente (Criar Check-ins)
+```bash
+# Para hoje
+curl -X POST http://localhost:3000/api/workers/create-habit-checks
+
+# Para uma data específica (query parameter)
+curl -X POST "http://localhost:3000/api/workers/create-habit-checks?date=2024-06-07"
+
+# Para uma data específica (JSON body)
+curl -X POST http://localhost:3000/api/workers/create-habit-checks \
+  -H "Content-Type: application/json" \
+  -d '{"date": "2024-06-07"}'
+```
+
+**Resposta:**
+```json
+{
+  "message": "Job executado com sucesso",
+  "date": "2024-06-07",
+  "created": 3
+}
+```
+
+**Erro (Data inválida):**
+```json
+{
+  "error": "Formato de data inválido. Use YYYY-MM-DD"
+}
+```
+
 ## 🗄️ Modelos de Dados
 
 ### User
@@ -529,6 +560,7 @@ go build -o habbits-api main.go
 - ✅ Endpoint para buscar check-ins do dia (`GET /habit-checks`) - **NOVO**
 - ✅ Endpoint para marcar/desmarcar check-ins (`PUT /habit-checks/:id/check`) - **NOVO**
 - ✅ Sistema de cron jobs automatizados - **NOVO**
+- ✅ Endpoint para executar jobs manualmente - **NOVO**
 
 ## ⏰ Cron Jobs Automatizados
 
@@ -547,6 +579,15 @@ A API inclui um sistema de cron jobs que executa tarefas automatizadas:
 ### Como Funciona
 
 1. **Check-ins Diários**: Todo dia à meia-noite, o sistema verifica todos os hábitos ativos e cria check-ins para os que devem ser executados naquele dia da semana
+
+### Execução Manual
+
+Você também pode executar jobs manualmente através do endpoint:
+- **POST** `/api/workers/create-habit-checks` - Cria check-ins para uma data específica
+  - **Query Parameter**: `date` (opcional, formato: YYYY-MM-DD)
+  - **JSON Body**: `{"date": "YYYY-MM-DD"}` (opcional)
+  - **Sem data**: Executa para hoje
+  - **Com data**: Executa para a data especificada
 
 ## 🐛 Correções Recentes
 
