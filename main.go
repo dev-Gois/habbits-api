@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/dev-Gois/habbits-api/config"
 	"github.com/dev-Gois/habbits-api/models"
 	"github.com/dev-Gois/habbits-api/routes"
@@ -16,5 +18,5 @@ func main() {
 
 	router := gin.Default()
 	routes.SetupRoutes(router)
-	router.Run(":3000")
+	router.Run(":" + os.Getenv("PORT"))
 }
