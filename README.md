@@ -43,7 +43,8 @@ habbits-api/
 │   │   ├── create.go        # Lógica de criação de usuários
 │   │   └── login.go         # Lógica de login de usuários
 │   └── habits/
-│       └── create.go        # Lógica de criação de hábitos
+│       ├── create.go        # Lógica de criação de hábitos
+│       └── find_all.go      # Lógica de busca de hábitos
 ├── go.mod                   # Dependências do Go
 ├── go.sum                   # Checksums das dependências
 └── main.go                  # Ponto de entrada da aplicação
@@ -110,6 +111,7 @@ http://localhost:3000/api
 | POST | `/api/login` | Fazer login de usuário | Não |
 | GET | `/api/user` | Obter dados do usuário logado | Sim |
 | POST | `/api/habits` | Criar novo hábito | Sim |
+| GET | `/api/habits` | Obter todos os hábitos do usuário | Sim |
 
 ### Exemplos de Uso
 
@@ -221,6 +223,64 @@ curl -X POST http://localhost:3000/api/habits \
 }
 ```
 
+#### Obter Todos os Hábitos (Autenticado)
+```bash
+curl -X GET http://localhost:3000/api/habits \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+**Resposta:**
+```json
+[
+  {
+    "id": 1,
+    "title": "Exercitar-se",
+    "icon": "🏃‍♂️",
+    "sunday": true,
+    "monday": true,
+    "tuesday": true,
+    "wednesday": true,
+    "thursday": true,
+    "friday": true,
+    "saturday": false,
+    "user_id": 1,
+    "user": {
+      "id": 1,
+      "name": "João Silva",
+      "email": "joao@example.com",
+      "created_at": "2024-01-15T10:30:00Z",
+      "updated_at": "2024-01-15T10:30:00Z"
+    },
+    "checks": [],
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  },
+  {
+    "id": 2,
+    "title": "Ler 30 minutos",
+    "icon": "📚",
+    "sunday": false,
+    "monday": true,
+    "tuesday": true,
+    "wednesday": true,
+    "thursday": true,
+    "friday": true,
+    "saturday": true,
+    "user_id": 1,
+    "user": {
+      "id": 1,
+      "name": "João Silva",
+      "email": "joao@example.com",
+      "created_at": "2024-01-15T10:30:00Z",
+      "updated_at": "2024-01-15T10:30:00Z"
+    },
+    "checks": [],
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  }
+]
+```
+
 ## 🗄️ Modelos de Dados
 
 ### User
@@ -327,6 +387,7 @@ go build -o habbits-api main.go
 - ✅ Tratamento de erros personalizado
 - ✅ Endpoint protegido `/user`
 - ✅ Criação de hábitos - **NOVO**
+- ✅ Busca de hábitos do usuário - **NOVO**
 
 ## 🔄 Próximas Funcionalidades
 
@@ -357,6 +418,11 @@ go build -o habbits-api main.go
 - **Problema**: Falta de endpoint para criação de hábitos
 - **Solução**: Implementado endpoint `POST /habits` com autenticação
 - **Melhoria**: Hábito criado automaticamente associado ao usuário logado
+
+### Busca de Hábitos
+- **Problema**: Falta de endpoint para buscar hábitos do usuário
+- **Solução**: Implementado endpoint `GET /habits` com autenticação
+- **Melhoria**: Retorna todos os hábitos do usuário logado com dados completos
 
 ## 🤝 Contribuindo
 
