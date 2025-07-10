@@ -18,7 +18,7 @@ type Habit struct {
 	Friday    bool         `json:"friday"`
 	Saturday  bool         `json:"saturday"`
 	UserID    uint         `json:"user_id" gorm:"not null"`
-	User      User         `json:"user" gorm:"foreignKey:UserID"`
+	User      User         `json:"user" gorm:"foreignKey:UserID" validate:"-"`
 	Checks    []HabitCheck `json:"checks,omitempty" gorm:"foreignKey:HabitID"`
 }
 

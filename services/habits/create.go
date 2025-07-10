@@ -12,5 +12,9 @@ func Create(habit *models.Habit, userID uint) error {
 		return err
 	}
 
+	if err := VerifyWeekdayOnCreate(habit); err != nil {
+		return err
+	}
+
 	return config.DB.Preload("User").First(habit, habit.ID).Error
 }
