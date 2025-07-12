@@ -14,9 +14,13 @@ func main() {
 	config.ConnectDB()
 	config.DB.AutoMigrate(&models.User{}, &models.Habit{}, &models.HabitCheck{})
 
+	// Inicializar cron scheduler
 	workers.InitScheduler()
 
 	router := gin.Default()
+
+	router.Use(config.SetupCors())
+
 	routes.SetupRoutes(router)
 	router.Run(":" + os.Getenv("PORT"))
 }

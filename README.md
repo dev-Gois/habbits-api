@@ -16,6 +16,7 @@ A Habbits API é uma aplicação backend construída com Go, Gin e GORM que perm
 - **bcrypt** - Criptografia de senhas
 - **godotenv** - Gerenciamento de variáveis de ambiente
 - **validator** - Validação de dados
+- **CORS** - Cross-Origin Resource Sharing configurado
 
 ## 📁 Estrutura do Projeto
 
@@ -530,6 +531,18 @@ go run main.go
 go build -o habbits-api main.go
 ```
 
+### Configuração CORS
+
+A API está configurada para aceitar requisições de qualquer origem localhost:
+
+- **AllowOrigins**: `*` (aceita qualquer origem)
+- **AllowMethods**: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS
+- **AllowHeaders**: Origin, Content-Length, Content-Type, Authorization
+- **AllowCredentials**: true
+- **MaxAge**: 12 horas
+
+Isso permite que frontends rodando em diferentes portas (3000, 3001, 8080, etc.) acessem a API sem problemas de CORS.
+
 ## 📦 Dependências Principais
 
 - `github.com/gin-gonic/gin` - Framework web
@@ -539,6 +552,7 @@ go build -o habbits-api main.go
 - `github.com/golang-jwt/jwt/v5` - Autenticação JWT
 - `golang.org/x/crypto/bcrypt` - Criptografia de senhas
 - `github.com/go-playground/validator/v10` - Validação de dados
+- `github.com/gin-contrib/cors` - Middleware CORS
 
 ## 🚧 Funcionalidades Implementadas
 
