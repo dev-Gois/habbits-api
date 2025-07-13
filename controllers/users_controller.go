@@ -34,14 +34,14 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, err := users.Login(user)
+	token, user, err := users.Login(user)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Login realizado com sucesso!", "token": token})
+	c.JSON(http.StatusOK, gin.H{"message": "Login realizado com sucesso!", "token": token, "user": user})
 }
 
 func GetUser(c *gin.Context) {
