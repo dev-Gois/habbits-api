@@ -107,6 +107,50 @@ habbits-api/
 
 A API estará disponível em `http://localhost:3000`
 
+## 🌱 Seeds - Dados de Demonstração
+
+Para facilitar o desenvolvimento e demonstração, o projeto inclui um sistema de seeds que popula o banco com dados fictícios realistas.
+
+### Como usar os seeds:
+
+```bash
+# Opção 1: Usando Makefile (recomendado)
+make seed        # Popular o banco com dados fictícios
+make clear-db    # Limpar todos os dados do banco
+
+# Opção 2: Usando script diretamente
+./scripts/seed.sh seed   # Popular o banco
+./scripts/seed.sh clear  # Limpar o banco
+```
+
+### O que os seeds criam:
+- **5 usuários** específicos (Pedro Feijó, Sextou da Cantina, Germano Fenner, Douglas Saboia, Jose Henrique) com senha: `123456`
+- **40 hábitos** variados (8 por usuário) com diferentes padrões de dias da semana
+- **800+ habit checks** dos últimos 60 dias com padrões realistas de completude
+- **Dados para gráficos** prontos para visualização no dashboard
+
+### Benefícios:
+- **Gráficos populados**: Dashboard com dados suficientes para visualizações
+- **Diferentes estados**: Hábitos completos, parciais e não feitos
+- **Padrões realistas**: Dados que simulam comportamento real do usuário
+- **Variedade temporal**: 60 dias de histórico para análises
+
+Para mais detalhes, consulte: [seeds/README.md](seeds/README.md)
+
+## 🔧 Comandos Úteis (Makefile)
+
+O projeto inclui um Makefile para facilitar comandos comuns:
+
+```bash
+make help        # Mostrar todos os comandos disponíveis
+make run         # Executar o servidor
+make build       # Compilar a aplicação
+make install     # Instalar dependências
+make seed        # Popular banco com dados fictícios
+make clear-db    # Limpar todos os dados do banco
+make clean       # Limpar arquivos compilados
+```
+
 ## 📡 Endpoints
 
 ### Base URL
