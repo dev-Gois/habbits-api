@@ -25,5 +25,8 @@ func SetupRoutes(router *gin.Engine) {
 
 		// Endpoints para executar jobs manualmente
 		api.POST("/workers/create-habit-checks", controllers.CreateHabitChecksForDate)
+
+		// Endpoint para dados da dashboard
+		api.GET("/dashboard", middlewares.Authorization(), controllers.GetDashboardData)
 	}
 }

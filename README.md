@@ -130,6 +130,7 @@ http://localhost:3000/api
 | PUT | `/api/habit-checks/:id/check` | Marcar/desmarcar check-in como concluído | Sim |
 | POST | `/api/workers/create-habit-checks` | Executar job de criar check-ins para uma data | Não |
 | GET | `/api/phrases/random` | Obter uma frase motivacional aleatória | Não |
+| GET | `/api/dashboard` | Obter dados para gráficos da dashboard | Sim |
 
 ### Exemplos de Uso
 
@@ -474,6 +475,54 @@ curl -X GET http://localhost:3000/api/phrases/random
 }
 ```
 
+#### Obter Dados da Dashboard (Autenticado)
+```bash
+# Últimos 30 dias (padrão)
+curl -X GET http://localhost:3000/api/dashboard \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+# Últimos 7 dias
+curl -X GET "http://localhost:3000/api/dashboard?days=7" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+**Resposta:**
+```json
+{
+  "message": "Dados da dashboard obtidos com sucesso",
+  "data": {
+    "hourly_distribution": [
+      {"time_range": "00h–06h", "count": 5},
+      {"time_range": "06h–09h", "count": 12},
+      {"time_range": "09h–12h", "count": 8},
+      {"time_range": "12h–15h", "count": 15},
+      {"time_range": "15h–18h", "count": 10},
+      {"time_range": "18h–21h", "count": 20},
+      {"time_range": "21h–24h", "count": 7}
+    ],
+    "weekly_average": [
+      {"day_of_week": "Domingo", "average": 2.5},
+      {"day_of_week": "Segunda", "average": 4.2},
+      {"day_of_week": "Terça", "average": 3.8},
+      {"day_of_week": "Quarta", "average": 4.1},
+      {"day_of_week": "Quinta", "average": 3.9},
+      {"day_of_week": "Sexta", "average": 3.3},
+      {"day_of_week": "Sábado", "average": 2.8}
+    ],
+    "timeline_evolution": [
+      {"date": "2024-06-01", "count": 3},
+      {"date": "2024-06-02", "count": 5},
+      {"date": "2024-06-03", "count": 2}
+    ]
+  },
+  "period": {
+    "days": 30,
+    "start_date": "2024-05-08",
+    "end_date": "2024-06-07"
+  }
+}
+```
+
 ## 🗄️ Modelos de Dados
 
 ### User
@@ -606,6 +655,7 @@ Isso permite que frontends rodando em diferentes portas (3000, 3001, 8080, etc.)
 - ✅ Sistema de cron jobs automatizados - **NOVO**
 - ✅ Endpoint para executar jobs manualmente - **NOVO**
 - ✅ Endpoint para frases motivacionais aleatórias - **NOVO**
+- ✅ Endpoint para dados da dashboard com gráficos - **NOVO**
 
 ## ⏰ Cron Jobs Automatizados
 
