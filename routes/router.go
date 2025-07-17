@@ -21,7 +21,9 @@ func SetupRoutes(router *gin.Engine) {
 		api.PUT("/habits/:id", middlewares.Authorization(), controllers.UpdateHabit)
 		api.GET("/habit-checks", middlewares.Authorization(), controllers.GetToday)
 		api.PUT("/habit-checks/:id/check", middlewares.Authorization(), controllers.Check)
+		api.GET("/phrases/random", controllers.GetRandomPhrase)
 
+		// Endpoints para executar jobs manualmente
 		api.POST("/workers/create-habit-checks", controllers.CreateHabitChecksForDate)
 	}
 }

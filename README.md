@@ -129,6 +129,7 @@ http://localhost:3000/api
 | GET | `/api/habit-checks` | Obter todos os check-ins do dia do usuário | Sim |
 | PUT | `/api/habit-checks/:id/check` | Marcar/desmarcar check-in como concluído | Sim |
 | POST | `/api/workers/create-habit-checks` | Executar job de criar check-ins para uma data | Não |
+| GET | `/api/phrases/random` | Obter uma frase motivacional aleatória | Não |
 
 ### Exemplos de Uso
 
@@ -449,6 +450,30 @@ curl -X POST http://localhost:3000/api/workers/create-habit-checks \
 }
 ```
 
+#### Obter Frase Aleatória
+```bash
+curl -X GET http://localhost:3000/api/phrases/random
+```
+
+**Resposta:**
+```json
+{
+  "message": "Frase aleatória encontrada com sucesso!",
+  "phrase": {
+    "id": 42,
+    "quote": "Sucesso é ir de fracasso em fracasso sem perder o entusiasmo.",
+    "author": "Winston Churchill"
+  }
+}
+```
+
+**Erro (Arquivo não encontrado):**
+```json
+{
+  "error": "Erro ao ler arquivo de frases"
+}
+```
+
 ## 🗄️ Modelos de Dados
 
 ### User
@@ -488,6 +513,11 @@ curl -X POST http://localhost:3000/api/workers/create-habit-checks \
 - `habit_id` - ID do hábito
 - `done` - Status de conclusão
 - `date` - Data do check-in
+
+### Phrase
+- `id` - ID único da frase
+- `quote` - Texto da frase motivacional
+- `author` - Autor da frase
 
 ## 🔐 Autenticação
 
@@ -575,6 +605,7 @@ Isso permite que frontends rodando em diferentes portas (3000, 3001, 8080, etc.)
 - ✅ Endpoint para marcar/desmarcar check-ins (`PUT /habit-checks/:id/check`) - **NOVO**
 - ✅ Sistema de cron jobs automatizados - **NOVO**
 - ✅ Endpoint para executar jobs manualmente - **NOVO**
+- ✅ Endpoint para frases motivacionais aleatórias - **NOVO**
 
 ## ⏰ Cron Jobs Automatizados
 
